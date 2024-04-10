@@ -4,7 +4,7 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { PrivateRoutes, Roles } from "../../../../models/index";
-import { ReactComponent as Logo } from "../../../../utils/img/Logo/logoRapiwash.svg";
+import { ReactComponent as Logo } from "../../../../utils/img/Logo/logoLaAntigueña2.svg";
 import Logout from "../../Logout/Logout";
 import "./headerCoord.scss";
 import { oldOrder } from "../../../../services/global";

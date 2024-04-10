@@ -12,7 +12,7 @@ import { modals } from "@mantine/modals";
 
 import { persistLocalStorage } from "../../../utils/persistence.local-storage/localStorage.util";
 import "./login.scss";
-import { ReactComponent as Logo } from "../../../utils/img/Logo/logoRapiwash.svg";
+import { ReactComponent as Logo } from "../../../utils/img/Logo/logoLaAntigueña.svg";
 import axios from "axios";
 
 import { GetInfoUser } from "../../../redux/actions/aUser";

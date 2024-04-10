@@ -21,7 +21,7 @@ import "./ordernServicio.scss";
 
 import { ReactComponent as Eliminar } from "../../../utils/img/OrdenServicio/eliminar.svg";
 // import { ReactComponent as Lavadora } from '../../../utils/img/OrdenServicio/lavadora.svg';
-import { ReactComponent as Logo } from "../../../utils/img/Logo/logoRapiwash.svg";
+import { ReactComponent as Logo } from "../../../utils/img/Logo/logoLaAntigueña.svg";
 
 import Tranferencia from "../../../utils/img/OrdenServicio/Transferencia.png";
 import Efectivo from "../../../utils/img/OrdenServicio/dinero.png";
