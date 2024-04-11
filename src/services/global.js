@@ -14,9 +14,9 @@ export const politicaAbandono = {
   mResaltado: "El plazo maximo para retirar las prendas es de 20 dias ",
   mGeneral: `despues de entregada a la lavanderia; vencido el plazo se donara a instituciones de caridad.No hay lugar a
    reclamo una ves retirada la prenda No nos reposabilizamos por prendas que se destiñan por malos tintes, botones o adornos 
-   que no resistan al lavado o planchado, por las prendas que se deterioren por estar demasiado usadas, tejidos y confecciones defectuosas.
-    La indemnización por ropa perdida o malograda se ajusta de acuerdo a la ley de Profeco que equivale a 3 veces del valor de la nota total de venta.`,
+   que no resistan al lavado o planchado, por las prendas que se deterioren por estar demasiado usadas, tejidos y confecciones defectuosas.`,
 };
+//La indemnización por ropa perdida o malograda se ajusta de acuerdo a la ley de Profeco que equivale a 3 veces del valor de la nota total de venta
 
 export const documento = "DPI / Celular"; // DNI
 
