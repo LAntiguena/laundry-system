@@ -79,8 +79,11 @@ const Setting = () => {
             <img src={portafolioSetting} alt="" />
           </div>
           <div>
-            <h1>Servicios</h1>
-            <p>Realiza Registros y Actualizacion de Servicios </p>
+            <h1>Ajustes de Servicios</h1>
+            <p>
+              Realiza nuevos Registros y Actualizacion de Servicios, pecios,
+              nombres y asignacion de categorias
+            </p>
           </div>
         </Link>
         <Link
