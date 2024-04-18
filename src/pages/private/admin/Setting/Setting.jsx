@@ -36,7 +36,7 @@ const Setting = () => {
           <div className="img">
             <img src={userSetting} alt="" />
           </div>
-          <div>
+          <div className="info-desc">
             <h1>Ajuste de Usuarios</h1>
             <p>Realiza Eliminacion, Actualizacion y Agregar nuevo usuario</p>
           </div>
@@ -48,7 +48,7 @@ const Setting = () => {
           <div className="img">
             <img src={businessSetting} alt="" />
           </div>
-          <div>
+          <div className="info-desc">
             <h1>Ajuste del Negocio</h1>
             <p>Cambios de horarios, nombre del negocio , direccion</p>
           </div>
@@ -78,7 +78,7 @@ const Setting = () => {
           <div className="img">
             <img src={portafolioSetting} alt="" />
           </div>
-          <div>
+          <div className="info-desc">
             <h1>Ajustes de Servicios</h1>
             <p>
               Realiza nuevos Registros y Actualizacion de Servicios, pecios,
@@ -93,10 +93,10 @@ const Setting = () => {
           <div className="img">
             <img src={categoriasSetting} alt="" />
           </div>
-          <div>
+          <div className="info-desc">
             <h1>Categorias</h1>
             <p>
-              Realiza Registros , Actualizaciones en Categorias de Productos y
+              Realiza Registros , Actualizaciones en Categorias para los
               Servicios
             </p>
           </div>
@@ -120,7 +120,7 @@ const Setting = () => {
           <div className="img">
             <img src={pointsSetting} alt="" />
           </div>
-          <div>
+          <div className="info-desc">
             <h1>Ajuste de Puntos</h1>
             <p>
               Actualiza el valor de puntos, "Donde "x" cantidad de {nameMoneda}{" "}
@@ -135,7 +135,7 @@ const Setting = () => {
           <div className="img">
             <img src={impuestoSetting} alt="" />
           </div>
-          <div>
+          <div className="info-desc">
             <h1>Ajuste de Impuesto</h1>
             <p>Actualiza el valor del {nameImpuesto}, en porcentaje</p>
           </div>
@@ -147,7 +147,7 @@ const Setting = () => {
           <div className="img">
             <img src={metasSetting} alt="" />
           </div>
-          <div>
+          <div className="info-desc">
             <h1>Ajuste de Metas</h1>
             <p>Actualiza el valor de la (Meta Mensual)</p>
           </div>

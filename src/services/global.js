@@ -18,7 +18,7 @@ export const politicaAbandono = {
 };
 //La indemnización por ropa perdida o malograda se ajusta de acuerdo a la ley de Profeco que equivale a 3 veces del valor de la nota total de venta
 
-export const documento = "NIT / Celular"; // DNI
+export const documento = "NIT"; // DNI
 
 export const nameImpuesto = "IVA"; // IGV
 
