@@ -33,7 +33,6 @@
     "socket.io-client": "^4.7.2",
     "styled-components": "6.0.5",
     "vite-plugin-svgr": "3.2.0",
-    "xlsx": "^0.18.5",
     "yup": "1.2.0"
   },
   "devDependencies": {
