@@ -154,7 +154,7 @@ const Ticket = React.forwardRef((props, ref) => {
                   {/* <h1>LAVANDERIA</h1>
                   <h1 className="name">{InfoNegocio?.name}</h1> */}
                   {InfoNegocio.numero.state ? (
-                    <span>telf : {InfoNegocio?.numero?.info}</span>
+                    <span>tel : {InfoNegocio?.numero?.info}</span>
                   ) : null}
                 </div>
               </div>
