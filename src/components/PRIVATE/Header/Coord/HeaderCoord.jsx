@@ -4,10 +4,10 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { PrivateRoutes, Roles } from "../../../../models/index";
-import { ReactComponent as Logo } from "../../../../utils/img/Logo/logoLaAntigueña2.svg";
 import Logout from "../../Logout/Logout";
 import "./headerCoord.scss";
-import { oldOrder } from "../../../../services/global";
+
+import { ReactComponent as Logo } from "../../../../utils/img/Logo/logo2.svg";
 
 const HeaderUser = () => {
   const userState = useSelector((store) => store.user.infoUsuario);
@@ -135,6 +135,11 @@ const HeaderUser = () => {
             <div className="left" />
             <div className="right" />
           </div>
+          {/* <li>
+            <Link to={`./${PrivateRoutes.PERSONAL}`} className="active">
+              ASISTENCIA
+            </Link>
+          </li> */}
           <li>
             <Link
               to={`./${PrivateRoutes.LIST_ORDER_SERVICE}`}
@@ -144,8 +149,8 @@ const HeaderUser = () => {
             </Link>
           </li>
           {userState.rol === Roles.ADMIN ||
-          userState.rol === Roles.COORD ||
-          userState.rol === Roles.GERENTE ? (
+          userState.rol === Roles.GERENTE ||
+          userState.rol === Roles.COORD ? (
             <>
               <li>
                 <Link to={`./${PrivateRoutes.REGISTER_TIENDA}`}>Tienda</Link>
@@ -181,7 +186,7 @@ const HeaderUser = () => {
               <li className="pages-admin">
                 <Link to={`./${PrivateRoutes.SETTING}`}>Ajustes</Link>
               </li>
-              {oldOrder ? (
+              {InfoNegocio?.oldOrder ? (
                 <li>
                   <Link to={`./${PrivateRoutes.REGISTER_OLDS}`}>
                     Registro Antiguos

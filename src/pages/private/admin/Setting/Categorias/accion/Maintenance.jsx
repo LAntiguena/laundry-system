@@ -84,6 +84,8 @@ const Maintenance = ({ info, cancelarEdit }) => {
         name: info.name,
         tipo: info.tipo,
       });
+    } else {
+      formik.resetForm();
     }
   }, [info]);
 

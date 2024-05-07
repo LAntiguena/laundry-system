@@ -56,9 +56,9 @@ const AddOld = () => {
 
   // Lista de clientes
   const [infoClientes, setInfoClientes] = useState([]);
-  // // Puntos del cliente Actual
+  // Puntos del cliente Actual
   const [dataScore, setDataScore] = useState(false);
-  // // valor por puntos
+  // valor por puntos
   const [vScore, setVScore] = useState(null);
   // Impuesto
   const [impuesto, setImpuesto] = useState(null);
@@ -204,8 +204,6 @@ const AddOld = () => {
       },
     };
 
-    console.log(newRow);
-
     return newRow;
   };
 
@@ -279,11 +277,11 @@ const AddOld = () => {
           fecha: tFecha(formik.values.dateRecojo),
           hora: DateCurrent().format3,
         },
-        idCuadre: "",
+        isCounted: false,
         idUser: InfoUsuario._id,
       };
     });
-
+    2;
     const infoOrden = {
       codRecibo: info.codigo,
       dateRecepcion: {
@@ -295,8 +293,6 @@ const AddOld = () => {
       Items: infoIntem,
       celular: info.phone,
       direccion: info.direccion,
-      Pago: info.pago,
-      ListPago: lPago,
       datePrevista: {
         fecha: tFecha(info.datePrevista),
         hora: tHora(infoNegocio.horario.horas.fin, 1, "antes"),
@@ -328,6 +324,7 @@ const AddOld = () => {
     dispatch(
       AddOrdenServices({
         infoOrden,
+        infoPago: lPago,
         rol: InfoUsuario.rol,
       })
     ).then((res) => {

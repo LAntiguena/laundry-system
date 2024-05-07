@@ -176,7 +176,7 @@ const Servicios = () => {
                     setAction("Edit");
                   }}
                 >
-                  Actualizar Servicio
+                  Actualizar
                 </Button>
 
                 {rowPick.categoria.nivel === "secundario" ? (
@@ -185,7 +185,7 @@ const Servicios = () => {
                     style={{ background: "#e76565" }}
                     onClick={() => handleDeleteService(rowPick._id)}
                   >
-                    Eliminar Servicio
+                    Eliminar
                   </Button>
                 ) : null}
               </div>

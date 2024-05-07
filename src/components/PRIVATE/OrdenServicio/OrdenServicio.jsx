@@ -20,8 +20,8 @@ import Portal from "../Portal/Portal";
 import "./ordernServicio.scss";
 
 import { ReactComponent as Eliminar } from "../../../utils/img/OrdenServicio/eliminar.svg";
-// import { ReactComponent as Lavadora } from '../../../utils/img/OrdenServicio/lavadora.svg';
-import { ReactComponent as Logo } from "../../../utils/img/Logo/logoLaAntigueña.svg";
+// import { ReactComponent as Lavadora } from "../../../utils/img/OrdenServicio/lavadora.svg";
+import { ReactComponent as Logo } from "../../../utils/img/Logo/logo.svg";
 
 import Tranferencia from "../../../utils/img/OrdenServicio/Transferencia.png";
 import Efectivo from "../../../utils/img/OrdenServicio/dinero.png";
@@ -40,12 +40,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { PrivateRoutes } from "../../../models";
 import axios from "axios";
-import {
-  DateCurrent,
-  DiasAttencion,
-  HoraAttencion,
-  handleGetInfoPago,
-} from "../../../utils/functions";
+import { DateCurrent, handleGetInfoPago } from "../../../utils/functions";
 import SwitchModel from "../../SwitchModel/SwitchModel";
 import Promocion from "./Promocion/Promocion";
 import { setLastRegister } from "../../../redux/states/service_order";
@@ -55,10 +50,10 @@ import {
   documento,
   ingresoDigital,
   nameImpuesto,
-  nameMoneda,
   simboloMoneda,
 } from "../../../services/global";
 import ButtonSwitch from "../MetodoPago/ButtonSwitch/ButtonSwitch";
+import { DeletePago, UpdatePago } from "../../../redux/actions/aPago";
 
 const OrdenServicio = ({
   mode,
@@ -66,14 +61,12 @@ const OrdenServicio = ({
   onAction,
   iEdit,
   onReturn,
-  iDelivery,
+  nameDefault,
 }) => {
   const iCodigo = useSelector((state) => state.codigo.infoCodigo.codActual);
   const infoPromocion = useSelector((state) => state.promocion.infoPromocion);
   const InfoNegocio = useSelector((state) => state.negocio.infoNegocio);
   const InfoUsuario = useSelector((state) => state.user.infoUsuario);
-  const InfoLastCuadre = useSelector((state) => state.cuadre.lastCuadre);
-  const InfoCuadreActual = useSelector((state) => state.cuadre.cuadreActual);
 
   const InfoServicios = useSelector((state) => state.servicios.listServicios);
   const InfoCategorias = useSelector(
@@ -124,7 +117,7 @@ const OrdenServicio = ({
         "Debe haber al menos un item - Delivery no cuenta",
         function (value) {
           return value.some(
-            (item) => item.identificador !== getInfoDelivery()._id
+            (item) => item.identificador !== getInfoDelivery()?._id
           );
         }
       )
@@ -141,7 +134,7 @@ const OrdenServicio = ({
     return Items.map((item) => {
       // Transforma cada item a la nueva estructura
       const isDelivery =
-        getInfoDelivery()._id === item.identificador ? true : false;
+        getInfoDelivery()?._id === item.identificador ? true : false;
       return {
         cantidad: item.cantidad,
         identificador: item.identificador,
@@ -168,8 +161,8 @@ const OrdenServicio = ({
       dni: iEdit ? iEdit.dni : "",
       name: iEdit
         ? iEdit.Nombre
-        : mode === "Delivery" && iDelivery
-        ? iDelivery.name
+        : mode === "Delivery" && nameDefault
+        ? nameDefault
         : "",
       direccion: iEdit ? iEdit.direccion : "",
       phone: iEdit ? iEdit.celular : "",
@@ -184,20 +177,22 @@ const OrdenServicio = ({
         : new Date(),
       dayhour: iEdit?.datePrevista?.hora || "17:00",
       listPago: iEdit ? iEdit.ListPago : [],
-      pago: iEdit ? iEdit.Pago : "Pendiente",
+      pago: iEdit
+        ? handleGetInfoPago(iEdit.ListPago, iEdit.totalNeto).estado
+        : "Pendiente",
       items: iEdit
         ? getItemsAdaptados(iEdit.Items)
         : mode === "Delivery"
         ? [
             {
-              identificador: getInfoDelivery()._id,
+              identificador: getInfoDelivery()?._id,
               tipo: "servicio",
               cantidad: 1,
               item: "Delivery",
               simboloMedida: "vj",
               descripcion: "Recojo y Entrega",
-              price: getInfoDelivery().precioVenta,
-              total: getInfoDelivery().precioVenta,
+              price: getInfoDelivery()?.precioVenta,
+              total: getInfoDelivery()?.precioVenta,
               disable: {
                 cantidad: true,
                 item: true,
@@ -352,55 +347,65 @@ const OrdenServicio = ({
           hora: moment().format("HH:mm"),
         },
         ...value,
-        idCuadre: InfoCuadreActual?.saved
-          ? InfoLastCuadre?._id === InfoCuadreActual?._id &&
-            InfoLastCuadre?.infoUser._id === InfoCuadreActual?.infoUser._id
-            ? InfoCuadreActual?._id
-            : ""
-          : "",
+        isCounted: true,
         idUser: InfoUsuario._id,
       };
 
-      if (iEdit && iEdit.modeEditAll === false) {
-        const updatedListPago = formik.values.listPago.map((pago) =>
-          pago._id === iPago._id ? iPago : pago
+      if (iEdit && iEdit.modeEditAll === false && iPago._id) {
+        console.log("gaa");
+        dispatch(UpdatePago({ idPago: iPago._id, pagoUpdated: iPago }));
+
+        navigate(
+          `/${PrivateRoutes.PRIVATE}/${PrivateRoutes.LIST_ORDER_SERVICE}`
         );
-        newListPago = updatedListPago;
-        newStatePago = handleGetInfoPago(newListPago, formik.values.totalNeto);
-        formik.setFieldValue("listPago", updatedListPago);
       } else {
-        newListPago.push(iPago);
-        newStatePago = handleGetInfoPago(newListPago, formik.values.totalNeto);
-        formik.setFieldValue("listPago", iPago);
+        if (
+          action === "Guardar" ||
+          (action === "Editar" && iEdit?.modeEditAll === true)
+        ) {
+          newListPago = [iPago];
+        } else {
+          newListPago = [...formik.values.listPago, iPago];
+        }
       }
-      formik.setFieldValue("pago", newStatePago.estado);
     } else {
       newListPago = [value];
-      const newStatePago = handleGetInfoPago(
-        newListPago,
-        formik.values.totalNeto
-      );
-      formik.setFieldValue("pago", newStatePago.estado);
       iEdit
         ? formik.values.listPago.filter((pago) => pago._id === value._id)
         : null;
     }
+
+    formik.setFieldValue("listPago", newListPago);
+    newStatePago = handleGetInfoPago(newListPago, formik.values.totalNeto);
+    formik.setFieldValue("pago", newStatePago.estado);
   };
 
   const handleNoPagar = (id) => {
-    let newListPago = [];
-    if (iEdit && iEdit.modeEditAll === false) {
-      const updatedListPago = formik.values.listPago.filter(
-        (pago) => pago._id !== id
-      );
-      newListPago = updatedListPago;
-      formik.setFieldValue("listPago", updatedListPago);
+    if (iEdit && iEdit.modeEditAll === false && id) {
+      modals.openConfirmModal({
+        title: "Elimiancion de Pago",
+        centered: true,
+        children: <Text size="sm">¿Estás seguro de Eliminar este Pago?</Text>,
+        labels: { confirm: "Si", cancel: "No" },
+        confirmProps: { color: "red" },
+        onCancel: () => console.log("eliminacion de pago cancelado"),
+        onConfirm: () => {
+          dispatch(DeletePago(id));
+
+          navigate(
+            `/${PrivateRoutes.PRIVATE}/${PrivateRoutes.LIST_ORDER_SERVICE}`
+          );
+        },
+      });
+    } else {
+      if (
+        action === "Guardar" ||
+        (action === "Editar" && iEdit?.modeEditAll === true)
+      ) {
+        formik.setFieldValue("listPago", []);
+        formik.setFieldValue("pago", "Pendiente");
+      }
     }
-    const newStatePago = handleGetInfoPago(
-      newListPago,
-      formik.values.totalNeto
-    );
-    formik.setFieldValue("pago", newStatePago.estado);
     setIPago();
   };
 
@@ -438,8 +443,6 @@ const OrdenServicio = ({
       Items: infoIntem,
       celular: info.phone,
       direccion: info.direccion,
-      Pago: info.pago,
-      ListPago: info.listPago,
       datePrevista: {
         fecha: tFecha(info.datePrevista),
         hora: info.dayhour,
@@ -484,10 +487,12 @@ const OrdenServicio = ({
 
     onAction({
       infoOrden,
+      infoPago: info.listPago,
       rol: InfoUsuario.rol,
     });
 
     formik.handleReset();
+    handleNoPagar();
   };
 
   const handleTextareaHeight = (textarea) => {
@@ -903,15 +908,14 @@ const OrdenServicio = ({
         <div className="body-form">
           <div className="c-title">
             <div className="info-t">
+              <Logo className="ico-logo" />
               <div className="title">
-                <Logo className="ico-logo" />
-                {Object.keys(InfoNegocio).length > 0 ? (
+                {/* {Object.keys(InfoNegocio).length > 0 ? (
                   <h3>
-                    {DiasAttencion(InfoNegocio?.horario.dias)}
-                    <br />
+                    {DiasAttencion(InfoNegocio?.horario)} de &nbsp;
                     {HoraAttencion(InfoNegocio?.horario.horas)}
                   </h3>
-                ) : null}
+                ) : null} */}
               </div>
             </div>
             <div className="n-recibo">
@@ -971,7 +975,7 @@ const OrdenServicio = ({
                 name="direccion"
                 handleChange={formik.handleChange}
                 handleBlur={formik.handleBlur}
-                tabI={"4"}
+                tabI={"3"}
                 valueName={formik.values.direccion}
                 text={"Direccion:"}
               />
@@ -979,7 +983,7 @@ const OrdenServicio = ({
                 name={"phone"}
                 handleChange={formik.handleChange}
                 handleBlur={formik.handleBlur}
-                tabI={"5"}
+                tabI={"4"}
                 valueName={formik.values.phone}
                 text={"Celular:"}
               />
@@ -994,7 +998,7 @@ const OrdenServicio = ({
                     onChange={(date) => {
                       formik.setFieldValue("dateRecojo", date);
                     }}
-                    tabIndex={"6"}
+                    tabIndex={"5"}
                     disabled={
                       iEdit ? (iEdit.modeEditAll ? false : true) : false
                     }
@@ -1042,7 +1046,7 @@ const OrdenServicio = ({
                       <button
                         type="button"
                         className="btn-next"
-                        tabIndex="7"
+                        tabIndex="6"
                         disabled={
                           iEdit ? (iEdit.modeEditAll ? false : true) : false
                         }
@@ -1199,7 +1203,7 @@ const OrdenServicio = ({
                   ]);
                 }}
                 disabled={iEdit ? (iEdit.modeEditAll ? false : true) : false}
-                tabI={"8"}
+                tabI={"7"}
               />
             </div>
             <table className="tb-prod">
@@ -1229,11 +1233,16 @@ const OrdenServicio = ({
                         disabled={row.disable.cantidad}
                         onChange={(e) => {
                           const inputValue = e.target.value;
-                          const validInput = inputValue
-                            ? inputValue.replace(/[^0-9.]/g, "")
-                            : "";
+                          // Permitir solo dígitos y un único punto decimal
+                          const validInput = inputValue.replace(/[^0-9.]/g, "");
+                          // Garantizar que no haya más de un punto decimal
+                          const validQuantity = validInput.replace(
+                            /\.(?=.*\.)/g,
+                            ""
+                          );
+
                           const newQuantity =
-                            validInput !== "" ? validInput : "";
+                            validQuantity !== "" ? validQuantity : "";
 
                           const price =
                             parseFloat(formik.values.items[index].price) || 0;
@@ -1395,7 +1404,7 @@ const OrdenServicio = ({
                         if (
                           (!iEdit || iEdit?.estado === "reservado") &&
                           formik.values.items[index].identificador !==
-                            getInfoDelivery()._id
+                            getInfoDelivery()?._id
                         ) {
                           const updatedItems = [...formik.values.items];
                           updatedItems.splice(index, 1);
@@ -1557,30 +1566,27 @@ const OrdenServicio = ({
                         <td className="space-action">
                           {DateCurrent().format4 === pago.date.fecha &&
                           pago.idUser === InfoUsuario._id ? (
-                            pago.idCuadre === "" ||
-                            pago.idCuadre === InfoLastCuadre._id ? (
-                              <>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setIPago(pago);
-                                    setIsPortalPago(!isPortalPago);
-                                  }}
-                                  className="btn-action btn-edit"
-                                >
-                                  <i className="fa-solid fa-pen"></i>
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    handleNoPagar(pago._id);
-                                  }}
-                                  className="btn-action btn-delete"
-                                >
-                                  <i className="fa-solid fa-delete-left"></i>
-                                </button>
-                              </>
-                            ) : null
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setIPago(pago);
+                                  setIsPortalPago(!isPortalPago);
+                                }}
+                                className="btn-action btn-edit"
+                              >
+                                <i className="fa-solid fa-pen"></i>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  handleNoPagar(pago._id);
+                                }}
+                                className="btn-action btn-delete"
+                              >
+                                <i className="fa-solid fa-delete-left"></i>
+                              </button>
+                            </>
                           ) : null}
                         </td>
                       </tr>
@@ -1604,7 +1610,16 @@ const OrdenServicio = ({
               <MetodoPago
                 handlePago={handlePago}
                 infoPago={iPago}
-                totalToPay={formik.values.totalNeto}
+                totalToPay={
+                  iEdit && iEdit.modeEditAll === false
+                    ? parseFloat(formik.values.totalNeto) -
+                      (formik.values.listPago?.reduce(
+                        (total, pago) => total + parseFloat(pago.total),
+                        0
+                      ) -
+                        parseFloat(iPago.total))
+                    : formik.values.totalNeto
+                }
                 handleNoPagar={handleNoPagar}
                 onClose={setIsPortalPago}
                 modeUse={

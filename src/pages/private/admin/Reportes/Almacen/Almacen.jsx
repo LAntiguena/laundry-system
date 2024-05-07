@@ -268,6 +268,8 @@ const Almacen = () => {
         (item) => item.identificador !== iDelivery._id
       );
 
+      const estadoPago = handleGetInfoPago(info.ListPago, info.totalNeto);
+
       return {
         _id: info._id,
         Recibo: String(info.codRecibo).padStart(4, "0"),
@@ -279,7 +281,7 @@ const Almacen = () => {
         totalNeto: info.totalNeto,
         Celular: info.celular,
         Direccion: info.direccion ? info.direccion : "- SIN INFORMACION -",
-        Pago: info.Pago,
+        Pago: estadoPago.estado,
         ListPago: info.ListPago,
         FechaPago: info.datePago,
         FechaIngreso: info.dateRecepcion,
