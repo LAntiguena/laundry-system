@@ -1,5 +1,5 @@
 // Zona Horaria
-export const timeZone = "America/Guatemala";
+export const timeZone = "America/Lima";
 // Tipo de Moneda
 export const tipoMoneda = "GTQ";
 // Formato de la moneda (separacion de miles - decimales) segun la configuracion regional
