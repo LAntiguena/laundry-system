@@ -7,7 +7,7 @@ import { PrivateRoutes, Roles } from "../../../../models/index";
 import Logout from "../../Logout/Logout";
 import "./headerCoord.scss";
 
-import { ReactComponent as Logo } from "../../../../utils/img/Logo/logo2.svg";
+import { ReactComponent as Logo } from "../../../../utils/img/Logo/logo.svg";
 
 const HeaderUser = () => {
   const userState = useSelector((store) => store.user.infoUsuario);
@@ -148,13 +148,17 @@ const HeaderUser = () => {
           userState.rol === Roles.COORD ? (
             <>
               <li>
-                <Link to={`./${PrivateRoutes.REGISTER_TIENDA}`}>Tienda</Link>
-              </li>
-              <li>
-                <Link to={`./${PrivateRoutes.REGISTER_DELIVERY}`}>
-                  Delivery
+                <Link to={`./${PrivateRoutes.REGISTER}`}>
+                  {InfoNegocio?.hasMobility ? "REGISTRAR" : "Tienda"}
                 </Link>
               </li>
+              {!InfoNegocio?.hasMobility ? (
+                <li>
+                  <Link to={`./${PrivateRoutes.REGISTER_DELIVERY}`}>
+                    Delivery
+                  </Link>
+                </li>
+              ) : null}
               <li>
                 <Link to={`./${PrivateRoutes.CUADRE_CAJA}`}>
                   Cuadre de Caja
